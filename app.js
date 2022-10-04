@@ -207,7 +207,7 @@ const App = (function(ItemCtrl, UICtrl){
         e.preventDefault();
     }
 
-    // Update item submit
+    // Click edit item
     const itemEditClick = function(e){
         if(e.target.classList.contains('edit-item')){
             // get list item id
