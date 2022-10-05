@@ -1,4 +1,32 @@
 // Storage Controller
+const StorageCtrl = (function(){
+    // Public methods
+    return {
+        storeItem: function(item){
+            let items;
+            // Check if any items in ls
+            if(localStorage.getItem('items') === null){
+                items = [];
+            } else {
+                items = JSON.parse(localStorage.getItem('items'));
+            }
+            // push new item
+            items.push(item);
+            // Set ls
+            localStorage.setItem('items', JSON.stringify(items));
+        },
+        getItemsFromStorage: function(){
+            let items;
+            if(localStorage.getItem('items') === null){
+                items = [];
+            } else {
+                items = JSON.parse(localStorage.getItem('items'));
+            }
+            return items;
+        }
+    }
+})()
+
 
 
 // Item Controller
@@ -12,11 +40,7 @@ const ItemCtrl = (function(){
 
     // Data Structure / State
     const data = {
-        items: [
-            {id:0, name: 'Steak Dinner', calories: 1200},
-            {id:1, name: 'Cookie', calories: 400},
-            {id:2, name: 'Eggs', calories: 300},
-        ],
+        items: StorageCtrl.getItemsFromStorage(),
         currentItem: null,
         totalCalories: 0
     }
@@ -233,7 +257,7 @@ const UICtrl = (function(){
 
 
 // App Controller
-const App = (function(ItemCtrl, UICtrl){
+const App = (function(ItemCtrl, StorageCtrl, UICtrl){
     // Load event listeners
     const loadEventListeners = function() {
         const UISelectors = UICtrl.getSelectors();
@@ -277,6 +301,9 @@ const App = (function(ItemCtrl, UICtrl){
             const totalCalories = ItemCtrl.getTotalCalories();
             // Add total calories to UI
             UICtrl.showTotalCalories(totalCalories);
+
+            // Store in localStorage
+            StorageCtrl.storeItem(newItem);
 
             // Clear fields
             UICtrl.clearInput();
@@ -382,7 +409,7 @@ const App = (function(ItemCtrl, UICtrl){
             loadEventListeners();
         }
     }
-})(ItemCtrl, UICtrl);
+})(ItemCtrl, StorageCtrl, UICtrl);
 
 
 
